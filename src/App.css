@@ -1,0 +1,16 @@
+.App {
+  max-width: 600px;
+  margin: 60px auto;
+  text-align: center;
+  font-family: system-ui, sans-serif;
+}
+
+h1 {
+  font-size: 2rem;
+  color: #222;
+}
+
+p {
+  color: #555;
+  font-size: 1.1rem;
+}
