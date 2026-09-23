@@ -1,16 +1,15 @@
 function Header() {
   return (
-    <header className="header">
-      <div className="header-brand">
-        <span className="header-icon">💼</span>
-        <div>
-          <h1>Job Application Tracker</h1>
-          <p className="header-subtitle">Track, organize, and manage your job search</p>
-        </div>
+    <header className="product-header">
+      <div className="brand-trigger">
+        <div className="brand-logo">J</div>
+        <span className="brand-text">Job Tracker</span>
       </div>
-      <div className="header-badge">
-        <span>Version 1.0 — UI Prototype</span>
-      </div>
+      <nav className="header-actions">
+        <a href="#" className="nav-link">Dashboard</a>
+        <a href="#" className="nav-link">Analytics</a>
+        <a href="#" className="nav-link">Settings</a>
+      </nav>
     </header>
   );
 }

@@ -38,16 +38,16 @@ function ApplicationList() {
   ];
 
   return (
-    <div className="list-container">
+    <div className="list-section">
       <div className="list-header">
         <div>
           <h2>Your Applications</h2>
-          <p className="list-subtitle">Overview of all submitted job applications</p>
+          <p>Overview of all submitted job applications</p>
         </div>
-        <span className="count-badge">{sampleApplications.length} Jobs</span>
+        <span className="badge-count">{sampleApplications.length} Jobs</span>
       </div>
 
-      <div className="cards-grid">
+      <div className="cards-container">
         {sampleApplications.map((app) => (
           <ApplicationCard
             key={app.id}

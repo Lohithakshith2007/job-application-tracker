@@ -1,31 +1,31 @@
 function ApplicationForm() {
   return (
-    <div className="form-card">
-      <div className="form-header">
-        <h2>Add New Application</h2>
-        <p>Enter job details below</p>
+    <div className="form-panel">
+      <div className="panel-header">
+        <h2>New Application</h2>
+        <p>Track a new job opportunity</p>
       </div>
 
-      <form className="application-form" onSubmit={(e) => e.preventDefault()}>
-        <div className="form-group">
-          <label htmlFor="company">Company Name</label>
+      <form className="product-form" onSubmit={(e) => e.preventDefault()}>
+        <div className="form-field">
+          <label htmlFor="company">Company</label>
           <input
             type="text"
             id="company"
-            placeholder="e.g. Google, Stripe"
+            placeholder="e.g. Acme Corp"
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="role">Job Role</label>
+        <div className="form-field">
+          <label htmlFor="role">Role</label>
           <input
             type="text"
             id="role"
-            placeholder="e.g. React Developer"
+            placeholder="e.g. Senior Engineer"
           />
         </div>
 
-        <div className="form-group">
+        <div className="form-field">
           <label htmlFor="status">Status</label>
           <select id="status">
             <option value="Applied">Applied</option>
@@ -35,22 +35,22 @@ function ApplicationForm() {
           </select>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="date">Application Date</label>
+        <div className="form-field">
+          <label htmlFor="date">Date Applied</label>
           <input type="date" id="date" />
         </div>
 
-        <div className="form-group">
+        <div className="form-field">
           <label htmlFor="notes">Notes</label>
           <textarea
             id="notes"
             rows="3"
-            placeholder="e.g. Referral link used, follow up next week..."
+            placeholder="Key contacts, referral info..."
           ></textarea>
         </div>
 
-        <button type="submit" className="btn-submit">
-          + Add Application
+        <button type="submit" className="btn-primary">
+          Save Application
         </button>
       </form>
     </div>

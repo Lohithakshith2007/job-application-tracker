@@ -10,11 +10,11 @@ function App() {
       <Header />
       <main className="main-container">
         <Dashboard />
-        <div className="content-grid">
-          <aside className="form-column">
+        <div className="content-layout">
+          <aside>
             <ApplicationForm />
           </aside>
-          <section className="list-column">
+          <section>
             <ApplicationList />
           </section>
         </div>

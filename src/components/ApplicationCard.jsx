@@ -1,30 +1,33 @@
 function ApplicationCard({ company, role, status, date, notes }) {
-  // Helper to determine status badge CSS class
+  // Helper to determine status pill CSS class
   const getStatusClass = (statusStr) => {
     switch (statusStr.toLowerCase()) {
-      case 'applied': return 'badge-applied';
-      case 'interview': return 'badge-interview';
-      case 'offer': return 'badge-offer';
-      case 'rejected': return 'badge-rejected';
-      default: return 'badge-default';
+      case 'applied': return 'status-applied';
+      case 'interview': return 'status-interview';
+      case 'offer': return 'status-offer';
+      case 'rejected': return 'status-rejected';
+      default: return 'status-applied';
     }
   };
 
   return (
     <div className="app-card">
-      <div className="app-card-header">
-        <div className="app-card-title">
-          <h3>{role}</h3>
-          <p className="company-name">🏢 {company}</p>
+      <div className="card-top">
+        <div>
+          <h3 className="card-role">{role}</h3>
+          <p className="card-company">{company}</p>
         </div>
-        <span className={`status-badge ${getStatusClass(status)}`}>
+        <span className={`status-pill ${getStatusClass(status)}`}>
           {status}
         </span>
       </div>
 
-      <div className="app-card-body">
-        <p className="app-date">📅 Applied: <span>{date}</span></p>
-        {notes && <p className="app-notes">📝 {notes}</p>}
+      <div className="card-bottom">
+        <p className="card-date">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          {date}
+        </p>
+        {notes && <p className="card-notes">{notes}</p>}
       </div>
     </div>
   );
