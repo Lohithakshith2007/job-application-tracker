@@ -47,7 +47,7 @@ function App() {
     <div className="app-wrapper">
       <Header />
       <main className="main-container">
-        <Dashboard />
+        <Dashboard applications={applications} />
         <div className="content-layout">
           <aside>
             <ApplicationForm />
