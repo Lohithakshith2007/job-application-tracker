@@ -43,6 +43,12 @@ const initialApplications = [
 function App() {
   const [applications, setApplications] = useState(initialApplications);
 
+  // Creates a new application object and adds it to the top of the list
+  function addApplication(newApp) {
+    const applicationWithId = { ...newApp, id: Date.now() };
+    setApplications([applicationWithId, ...applications]);
+  }
+
   return (
     <div className="app-wrapper">
       <Header />
@@ -50,7 +56,7 @@ function App() {
         <Dashboard applications={applications} />
         <div className="content-layout">
           <aside>
-            <ApplicationForm />
+            <ApplicationForm onAddApplication={addApplication} />
           </aside>
           <section>
             <ApplicationList applications={applications} />
