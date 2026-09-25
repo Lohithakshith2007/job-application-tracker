@@ -1,99 +1,82 @@
 import { useState } from 'react';
 
 function ApplicationForm({ onAddApplication }) {
-  // One piece of state per field — React tracks exactly what the user types
-  const [company, setCompany] = useState('');
-  const [role, setRole] = useState('');
-  const [status, setStatus] = useState('Applied');
-  const [date, setDate] = useState('');
-  const [notes, setNotes] = useState('');
+  const [formData, setFormData] = useState({
+    company: '',
+    role: '',
+    status: 'Applied',
+    date: '',
+    notes: ''
+  });
 
-  function handleSubmit(e) {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    // Don't submit if the two required fields are empty
-    if (!company.trim() || !role.trim()) return;
-
-    // Pass the new application up to App.jsx via the prop function
-    onAddApplication({ company, role, status, date, notes });
-
-    // Reset all fields back to empty after submitting
-    setCompany('');
-    setRole('');
-    setStatus('Applied');
-    setDate('');
-    setNotes('');
-  }
+    if (!formData.company || !formData.role) return;
+    
+    onAddApplication(formData);
+    setFormData({  company: '', role: '', status: 'Applied', date: '', notes: '' });
+  };
 
   return (
-    <div className="form-panel">
-      <div className="panel-header">
-        <h2>New Application</h2>
-        <p>Track a new job opportunity</p>
+    <div className="premium-form-panel">
+      <div className="pfp-glow"></div>
+      <div className="pfp-inner">
+        <div className="pfp-header">
+          <h3>Log New Application</h3>
+          <p>Track a new role in your pipeline.</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="pfp-form">
+          <div className="pfp-fieldgroup">
+            <div className="pfp-field">
+              <label>Company Name <span className="req">*</span></label>
+              <input type="text" name="company" placeholder="e.g. Vercel, Stripe" value={formData.company} onChange={handleChange} required />
+            </div>
+            
+            <div className="pfp-field">
+              <label>Role / Title <span className="req">*</span></label>
+              <input type="text" name="role" placeholder="e.g. Senior Frontend Engineer" value={formData.role} onChange={handleChange} required />
+            </div>
+          </div>
+
+          <div className="pfp-fieldgroup">
+            <div className="pfp-field">
+              <label>Current Status</label>
+              <div className="pfp-select-wrap">
+                <select name="status" value={formData.status} onChange={handleChange}>
+                  <option value="Applied">Applied</option>
+                  <option value="Interview">Interview</option>
+                  <option value="Offer">Offer / Hired</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+                <div className="pfp-select-caret">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </div>
+              </div>
+            </div>
+
+            <div className="pfp-field">
+              <label>Interaction Date</label>
+              <input type="date" name="date" value={formData.date} onChange={handleChange} />
+            </div>
+          </div>
+
+          <div className="pfp-field">
+            <label>Preparation Notes & Links</label>
+            <textarea name="notes" placeholder="Paste job description URL, referral contact, or prep notes here..." rows="3" value={formData.notes} onChange={handleChange}></textarea>
+          </div>
+
+          <button type="submit" className="pfp-submit-btn">
+            Save Application
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+        </form>
       </div>
-
-      <form className="product-form" onSubmit={handleSubmit}>
-        <div className="form-field">
-          <label htmlFor="company">Company</label>
-          <input
-            type="text"
-            id="company"
-            placeholder="e.g. Acme Corp"
-            value={company}
-            onChange={(e) => setCompany(e.target.value)}
-          />
-        </div>
-
-        <div className="form-field">
-          <label htmlFor="role">Role</label>
-          <input
-            type="text"
-            id="role"
-            placeholder="e.g. Senior Engineer"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          />
-        </div>
-
-        <div className="form-field">
-          <label htmlFor="status">Status</label>
-          <select
-            id="status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          >
-            <option value="Applied">Applied</option>
-            <option value="Interview">Interview</option>
-            <option value="Offer">Offer</option>
-            <option value="Rejected">Rejected</option>
-          </select>
-        </div>
-
-        <div className="form-field">
-          <label htmlFor="date">Date Applied</label>
-          <input
-            type="date"
-            id="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </div>
-
-        <div className="form-field">
-          <label htmlFor="notes">Notes</label>
-          <textarea
-            id="notes"
-            rows="3"
-            placeholder="Key contacts, referral info..."
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-          ></textarea>
-        </div>
-
-        <button type="submit" className="btn-primary">
-          Save Application
-        </button>
-      </form>
     </div>
   );
 }
