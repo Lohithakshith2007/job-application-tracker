@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import AppNav from './components/AppNav';
 import LandingPage from './components/LandingPage';
 import DashboardPage from './pages/DashboardPage';
@@ -30,6 +30,11 @@ function App() {
   const [activePage, setActivePage] = useState('dashboard');
   const { appData, updateAppData, clearAppData, storageError } = useAppData();
   const { applications, savedJobs, interviews, profile, preferences } = appData;
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+    document.querySelector('.app-main')?.scrollTo(0, 0);
+  }, [view, activePage]);
 
   function addApplication(newApp) {
     updateAppData((current) => ({
