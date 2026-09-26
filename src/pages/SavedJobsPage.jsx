@@ -1,50 +1,26 @@
 import { useState } from 'react';
 
-const initialSavedJobs = [
-  {
-    id: 1,
-    company: 'Vercel',
-    role: 'Senior Frontend Engineer',
-    location: 'Remote (US/EU)',
-    salary: '$160,000 - $190,000',
-    tags: ['React', 'Next.js', 'TypeScript'],
-    posted: '2 days ago'
-  },
-  {
-    id: 2,
-    company: 'Linear',
-    role: 'Product Engineer',
-    location: 'San Francisco, CA',
-    salary: '$170,000 - $200,000',
-    tags: ['React', 'GraphQL', 'Electron'],
-    posted: '4 days ago'
-  },
-  {
-    id: 3,
-    company: 'Supabase',
-    role: 'Developer Advocate',
-    location: 'Remote',
-    salary: '$140,000 - $170,000',
-    tags: ['PostgreSQL', 'Technical Writing', 'Open Source'],
-    posted: '1 week ago'
-  },
-  {
-    id: 4,
-    company: 'Raycast',
-    role: 'Extension Engineer',
-    location: 'London, UK / Remote',
-    salary: '£90,000 - £110,000',
-    tags: ['Node.js', 'Swift', 'React'],
-    posted: '3 days ago'
+const emptyJob = { company: '', role: '', location: '', salary: '', tags: '', posted: '' };
+
+function SavedJobsPage({ jobs, onAddJob, onDeleteJob, onAddApplication }) {
+  const [isAdding, setIsAdding] = useState(false);
+  const [formData, setFormData] = useState(emptyJob);
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    onAddJob({
+      ...formData,
+      tags: formData.tags.split(',').map((tag) => tag.trim()).filter(Boolean),
+      posted: formData.posted.trim() || 'Saved today',
+    });
+    setFormData(emptyJob);
+    setIsAdding(false);
   }
-];
 
-function SavedJobsPage() {
-  const [jobs, setJobs] = useState(initialSavedJobs);
-
-  const removeJob = (id) => {
-    setJobs(jobs.filter(job => job.id !== id));
-  };
+  function updateField(event) {
+    const { name, value } = event.target;
+    setFormData((current) => ({ ...current, [name]: value }));
+  }
 
   return (
     <div className="page">
@@ -53,10 +29,30 @@ function SavedJobsPage() {
           <h1 className="page-title">Saved Jobs</h1>
           <p className="page-subtitle">Bookmark open positions to review and apply to later.</p>
         </div>
-        <span className="badge-count" style={{ fontSize: '.9rem', padding: '6px 14px' }}>
-          {jobs.length} Bookmarked
-        </span>
+        <div className="page-header-actions">
+          <span className="badge-count" style={{ fontSize: '.9rem', padding: '6px 14px' }}>
+            {jobs.length} Bookmarked
+          </span>
+          <button className="btn btn-primary btn-sm" onClick={() => setIsAdding((current) => !current)}>
+            {isAdding ? 'Cancel' : '+ Save Job'}
+          </button>
+        </div>
       </div>
+
+      {isAdding && (
+        <form className="data-entry-panel" onSubmit={handleSubmit}>
+          <h2>Save a job</h2>
+          <div className="data-entry-grid">
+            <div className="field"><label htmlFor="job-company">Company</label><input className="input-base" id="job-company" name="company" value={formData.company} onChange={updateField} required /></div>
+            <div className="field"><label htmlFor="job-role">Role</label><input className="input-base" id="job-role" name="role" value={formData.role} onChange={updateField} required /></div>
+            <div className="field"><label htmlFor="job-location">Location</label><input className="input-base" id="job-location" name="location" value={formData.location} onChange={updateField} placeholder="Remote or city" /></div>
+            <div className="field"><label htmlFor="job-salary">Salary</label><input className="input-base" id="job-salary" name="salary" value={formData.salary} onChange={updateField} placeholder="Optional" /></div>
+            <div className="field"><label htmlFor="job-tags">Skills / tags</label><input className="input-base" id="job-tags" name="tags" value={formData.tags} onChange={updateField} placeholder="React, TypeScript" /></div>
+            <div className="field"><label htmlFor="job-posted">Posting age</label><input className="input-base" id="job-posted" name="posted" value={formData.posted} onChange={updateField} placeholder="Posted today" /></div>
+          </div>
+          <div className="data-entry-actions"><button type="submit" className="btn btn-primary btn-sm">Save Job</button></div>
+        </form>
+      )}
 
       {jobs.length === 0 ? (
         <div className="empty-state card">
@@ -70,35 +66,35 @@ function SavedJobsPage() {
             <div key={job.id} className="job-card">
               <div className="job-card-head">
                 <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
-                  <div className="job-card-logo">{job.company.charAt(0)}</div>
+                  <div className="job-card-logo">{job.company.charAt(0).toUpperCase()}</div>
                   <div className="job-card-title">
                     <h3>{job.role}</h3>
-                    <p>{job.company} • {job.location}</p>
+                    <p>{job.company}{job.location ? ` • ${job.location}` : ''}</p>
                   </div>
                 </div>
                 <button
                   className="btn-ghost"
                   style={{ padding: '4px 8px', borderRadius: 'var(--r-sm)', color: 'var(--rejected)' }}
-                  onClick={() => removeJob(job.id)}
+                  onClick={() => onDeleteJob(job.id)}
                   title="Remove saved job"
+                  aria-label={`Remove ${job.role} at ${job.company}`}
                 >
                   ✕
                 </button>
               </div>
 
-              <div className="job-meta-pills">
-                {job.tags.map((tag) => (
-                  <span key={tag} className="meta-pill">{tag}</span>
-                ))}
-              </div>
+              {job.tags?.length > 0 && <div className="job-meta-pills">{job.tags.map((tag) => <span key={tag} className="meta-pill">{tag}</span>)}</div>}
 
               <div className="job-card-footer">
                 <div>
-                  <span className="job-salary">{job.salary}</span>
+                  {job.salary && <span className="job-salary">{job.salary}</span>}
                   <p style={{ fontSize: '.75rem', color: 'var(--tx-3)', marginTop: '2px' }}>{job.posted}</p>
                 </div>
-                <button className="btn btn-accent-ghost btn-sm">
-                  Apply Now →
+                <button
+                  className="btn btn-accent-ghost btn-sm"
+                  onClick={() => onAddApplication({ company: job.company, role: job.role, status: 'Applied', date: new Date().toISOString().slice(0, 10), notes: `Saved job${job.location ? ` • ${job.location}` : ''}${job.salary ? ` • ${job.salary}` : ''}` })}
+                >
+                  Add to Applications →
                 </button>
               </div>
             </div>

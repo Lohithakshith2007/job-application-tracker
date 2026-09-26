@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ApplicationCard from '../components/ApplicationCard';
 
-function ApplicationsPage({ applications }) {
+function ApplicationsPage({ applications, onUpdateApplication, onDeleteApplication }) {
   const [filter, setFilter] = useState('All');
   const [search, setSearch] = useState('');
 
@@ -65,6 +65,8 @@ function ApplicationsPage({ applications }) {
             <ApplicationCard
               key={app.id}
               app={app}
+              onUpdate={onUpdateApplication}
+              onDelete={onDeleteApplication}
             />
           ))}
         </div>

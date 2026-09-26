@@ -1,12 +1,13 @@
 function AnalyticsPage({ applications = [] }) {
-  const total = applications.length || 4;
-  const applied = applications.filter(a => a.status === 'Applied').length || 2;
-  const interview = applications.filter(a => a.status === 'Interview').length || 1;
-  const offer = applications.filter(a => a.status === 'Offer').length || 1;
-  const rejected = applications.filter(a => a.status === 'Rejected').length || 0;
+  const total = applications.length;
+  const applied = applications.filter(a => a.status === 'Applied').length;
+  const interview = applications.filter(a => a.status === 'Interview').length;
+  const offer = applications.filter(a => a.status === 'Offer').length;
+  const rejected = applications.filter(a => a.status === 'Rejected').length;
 
-  const interviewRate = Math.round(((interview + offer) / total) * 100) || 50;
-  const offerRate = Math.round((offer / total) * 100) || 25;
+  const percentage = (value) => total ? Math.round((value / total) * 100) : 0;
+  const interviewRate = percentage(interview + offer);
+  const offerRate = percentage(offer);
 
   return (
     <div className="page">
@@ -24,40 +25,40 @@ function AnalyticsPage({ applications = [] }) {
             <div className="bar-row">
               <div className="bar-label">
                 <span>Applied</span>
-                <span>{applied} ({Math.round((applied/total)*100)}%)</span>
+                <span>{applied} ({percentage(applied)}%)</span>
               </div>
               <div className="bar-track">
-                <div className="bar-fill bar-fill-applied" style={{ width: `${(applied/total)*100}%` }}></div>
+                <div className="bar-fill bar-fill-applied" style={{ width: `${percentage(applied)}%` }}></div>
               </div>
             </div>
 
             <div className="bar-row">
               <div className="bar-label">
                 <span>Interview</span>
-                <span>{interview} ({Math.round((interview/total)*100)}%)</span>
+                <span>{interview} ({percentage(interview)}%)</span>
               </div>
               <div className="bar-track">
-                <div className="bar-fill bar-fill-interview" style={{ width: `${(interview/total)*100}%` }}></div>
+                <div className="bar-fill bar-fill-interview" style={{ width: `${percentage(interview)}%` }}></div>
               </div>
             </div>
 
             <div className="bar-row">
               <div className="bar-label">
                 <span>Offer</span>
-                <span>{offer} ({Math.round((offer/total)*100)}%)</span>
+                <span>{offer} ({percentage(offer)}%)</span>
               </div>
               <div className="bar-track">
-                <div className="bar-fill bar-fill-offer" style={{ width: `${(offer/total)*100}%` }}></div>
+                <div className="bar-fill bar-fill-offer" style={{ width: `${percentage(offer)}%` }}></div>
               </div>
             </div>
 
             <div className="bar-row">
               <div className="bar-label">
                 <span>Rejected</span>
-                <span>{rejected} ({Math.round((rejected/total)*100)}%)</span>
+                <span>{rejected} ({percentage(rejected)}%)</span>
               </div>
               <div className="bar-track">
-                <div className="bar-fill bar-fill-rejected" style={{ width: `${(rejected/total)*100}%` }}></div>
+                <div className="bar-fill bar-fill-rejected" style={{ width: `${percentage(rejected)}%` }}></div>
               </div>
             </div>
           </div>

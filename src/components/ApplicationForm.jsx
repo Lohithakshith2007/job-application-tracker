@@ -35,12 +35,12 @@ function ApplicationForm({ onAddApplication }) {
           <div className="pfp-fieldgroup">
             <div className="pfp-field">
               <label>Company Name <span className="req">*</span></label>
-              <input type="text" name="company" placeholder="e.g. Vercel, Stripe" value={formData.company} onChange={handleChange} required />
+              <input type="text" name="company" placeholder="Vercel, Stripe" value={formData.company} onChange={handleChange} required />
             </div>
             
             <div className="pfp-field">
               <label>Role / Title <span className="req">*</span></label>
-              <input type="text" name="role" placeholder="e.g. Senior Frontend Engineer" value={formData.role} onChange={handleChange} required />
+              <input type="text" name="role" placeholder="Frontend Engineer" value={formData.role} onChange={handleChange} required />
             </div>
           </div>
 

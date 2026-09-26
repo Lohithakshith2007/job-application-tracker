@@ -3,24 +3,90 @@ import AppNav from './components/AppNav';
 import LandingPage from './components/LandingPage';
 import DashboardPage from './pages/DashboardPage';
 import ApplicationsPage from './pages/ApplicationsPage';
-import { SavedJobsPage, InterviewsPage, AnalyticsPage, SettingsPage } from './pages/InnerPages';
+import SavedJobsPage from './pages/SavedJobsPage';
+import InterviewsPage from './pages/InterviewsPage';
+import AnalyticsPage from './pages/AnalyticsPage';
+import SettingsPage from './pages/SettingsPage';
+import { useAppData } from './hooks/useAppData';
 import './App.css';
 import './pages.css';
 
-const initialApplications = [
-  { id: 1, company: 'Frontend Studio', role: 'React Developer', status: 'Interview', date: '2026-09-15', notes: 'Passed technical screening. Final round scheduled next Tuesday.' },
-  { id: 2, company: 'TechCorp Labs', role: 'Junior Frontend Engineer', status: 'Offer', date: '2026-09-10', notes: 'Received offer letter. Reviewing compensation.' },
-  { id: 3, company: 'CloudScale Solutions', role: 'Full Stack Engineer', status: 'Applied', date: '2026-09-20', notes: 'Applied via company portal with employee referral.' },
-  { id: 4, company: 'DesignCraft Inc.', role: 'UI Developer', status: 'Applied', date: '2026-09-22', notes: 'Submitted portfolio along with application form.' },
-];
+function createId() {
+  return globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+function toInterviewDateParts(date) {
+  if (!date) return { day: '', month: '' };
+  const parsedDate = new Date(`${date}T12:00:00`);
+  return {
+    day: parsedDate.toLocaleDateString(undefined, { day: '2-digit' }),
+    month: parsedDate.toLocaleDateString(undefined, { month: 'short' }),
+  };
+}
 
 function App() {
   const [view, setView] = useState('landing');
   const [activePage, setActivePage] = useState('dashboard');
-  const [applications, setApplications] = useState(initialApplications);
+  const { appData, updateAppData, storageError } = useAppData();
+  const { applications, savedJobs, interviews, profile, preferences } = appData;
 
   function addApplication(newApp) {
-    setApplications([{ ...newApp, id: Date.now() }, ...applications]);
+    updateAppData((current) => ({
+      ...current,
+      applications: [{ ...newApp, id: createId(), date: newApp.date || new Date().toISOString().slice(0, 10) }, ...current.applications],
+    }));
+  }
+
+  function updateApplication(id, changes) {
+    updateAppData((current) => ({
+      ...current,
+      applications: current.applications.map((application) => (
+        application.id === id ? { ...application, ...changes } : application
+      )),
+    }));
+  }
+
+  function deleteApplication(id) {
+    updateAppData((current) => ({
+      ...current,
+      applications: current.applications.filter((application) => application.id !== id),
+    }));
+  }
+
+  function addSavedJob(job) {
+    updateAppData((current) => ({
+      ...current,
+      savedJobs: [{ ...job, id: createId() }, ...current.savedJobs],
+    }));
+  }
+
+  function deleteSavedJob(id) {
+    updateAppData((current) => ({
+      ...current,
+      savedJobs: current.savedJobs.filter((job) => job.id !== id),
+    }));
+  }
+
+  function addInterview(interview) {
+    updateAppData((current) => ({
+      ...current,
+      interviews: [{ ...interview, ...toInterviewDateParts(interview.date), id: createId() }, ...current.interviews],
+    }));
+  }
+
+  function deleteInterview(id) {
+    updateAppData((current) => ({
+      ...current,
+      interviews: current.interviews.filter((interview) => interview.id !== id),
+    }));
+  }
+
+  function saveSettings(nextSettings) {
+    updateAppData((current) => ({ ...current, ...nextSettings }));
+  }
+
+  function importAppData(importedData) {
+    updateAppData(importedData);
   }
 
   if (view === 'landing') {
@@ -30,34 +96,37 @@ function App() {
   let pageContent;
   switch (activePage) {
     case 'dashboard':
-      pageContent = <DashboardPage applications={applications} onAddApplication={addApplication} onNavigate={setActivePage} />;
+      pageContent = <DashboardPage applications={applications} savedJobs={savedJobs} interviews={interviews} profile={profile} onAddApplication={addApplication} onUpdateApplication={updateApplication} onDeleteApplication={deleteApplication} onNavigate={setActivePage} />;
       break;
     case 'applications':
-      pageContent = <ApplicationsPage applications={applications} onAddApplication={addApplication} />;
+      pageContent = <ApplicationsPage applications={applications} onUpdateApplication={updateApplication} onDeleteApplication={deleteApplication} />;
       break;
     case 'saved-jobs':
-      pageContent = <SavedJobsPage />;
+      pageContent = <SavedJobsPage jobs={savedJobs} onAddJob={addSavedJob} onDeleteJob={deleteSavedJob} onAddApplication={addApplication} />;
       break;
     case 'interviews':
-      pageContent = <InterviewsPage />;
+      pageContent = <InterviewsPage interviews={interviews} onAddInterview={addInterview} onDeleteInterview={deleteInterview} />;
       break;
     case 'analytics':
       pageContent = <AnalyticsPage applications={applications} />;
       break;
     case 'settings':
-      pageContent = <SettingsPage />;
+      pageContent = <SettingsPage profile={profile} preferences={preferences} appData={appData} onSave={saveSettings} onImport={importAppData} />;
       break;
     default:
-      pageContent = <DashboardPage applications={applications} onAddApplication={addApplication} onNavigate={setActivePage} />;
+      pageContent = <DashboardPage applications={applications} savedJobs={savedJobs} interviews={interviews} profile={profile} onAddApplication={addApplication} onUpdateApplication={updateApplication} onDeleteApplication={deleteApplication} onNavigate={setActivePage} />;
   }
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell${preferences.compactCards ? ' compact-cards' : ''}`}>
       <AppNav
         activePage={activePage}
         setActivePage={setActivePage}
         onOpenLanding={() => setView('landing')}
       />
+      <div className={`storage-notice${storageError ? ' storage-notice-error' : ''}`} role="status" aria-live="polite">
+        {storageError || 'Your data is saved locally on this device'}
+      </div>
       <main className="app-main">
         {pageContent}
       </main>

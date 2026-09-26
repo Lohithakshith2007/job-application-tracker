@@ -3,29 +3,23 @@ import ApplicationForm from '../components/ApplicationForm';
 import ApplicationList from '../components/ApplicationList';
 import ApplicationCard from '../components/ApplicationCard';
 
-function DashboardPage({ applications, onAddApplication, onNavigate }) {
-  const recentApplications = applications.slice(0, 3);
-
-  const upcomingInterviews = [
-    { id: 1, company: 'Frontend Studio', role: 'React Developer', date: 'Oct 2, 2026', time: '2:00 PM', type: 'Technical Round' },
-    { id: 2, company: 'Stripe', role: 'Software Engineer', date: 'Oct 5, 2026', time: '10:30 AM', type: 'System Design' },
-  ];
-
-  const savedJobs = [
-    { id: 1, company: 'Vercel', role: 'Senior Frontend Engineer', location: 'Remote', salary: '$160k - $190k' },
-    { id: 2, company: 'Linear', role: 'Product Designer / Engineer', location: 'San Francisco, CA', salary: '$150k - $180k' },
-  ];
+function DashboardPage({ applications, savedJobs, interviews, profile, onAddApplication, onUpdateApplication, onDeleteApplication, onNavigate }) {
+  const today = new Date().toISOString().slice(0, 10);
+  const upcomingInterviews = interviews
+    .filter((interview) => interview.status === 'Upcoming' && interview.date >= today)
+    .sort((first, second) => first.date.localeCompare(second.date))
+    .slice(0, 3);
 
   return (
     <div className="page fade-in">
       <div className="page-header">
         <div>
-          <h1 className="page-title">Welcome back, Alex 👋</h1>
-          <p className="page-subtitle">Here is what is happening across your job application pipeline today.</p>
+          <h1 className="page-title">Welcome back{profile.fullName ? `, ${profile.fullName}` : ''}</h1>
+          <p className="page-subtitle">{profile.targetRole ? `Your ${profile.targetRole} search at a glance.` : 'Here is what is happening across your job application pipeline today.'}</p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 16px', background: 'var(--bg-elevated)', borderRadius: 'var(--r-full)', border: '1px solid var(--border)' }}>
           <div style={{ width: 8, height: 8, background: 'var(--accent)', borderRadius: '50%', boxShadow: '0 0 10px var(--accent)' }}></div>
-          <span style={{ fontSize: '.85rem', color: 'var(--tx-2)', fontWeight: 500 }}>Live Sync Active • {new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+          <span style={{ fontSize: '.85rem', color: 'var(--tx-2)', fontWeight: 500 }}>Saved on this device • {new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
         </div>
       </div>
 
@@ -38,16 +32,16 @@ function DashboardPage({ applications, onAddApplication, onNavigate }) {
 
             {/* Quick Actions Panel */}
             <div className="card" style={{ padding: '20px', marginTop: '20px' }}>
-              <h3 style={{ fontSize: '.95rem', fontWeight: 600, marginBottom: '12px' }}>⚡ Quick Actions</h3>
+              <h3 style={{ fontSize: '.95rem', fontWeight: 600, marginBottom: '12px' }}> Quick Actions</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <button className="btn btn-ghost btn-sm" style={{ justifyContent: 'flex-start' }} onClick={() => onNavigate('interviews')}>
-                  📅 Schedule Interview Prep
+                   Schedule Interview Prep
                 </button>
                 <button className="btn btn-ghost btn-sm" style={{ justifyContent: 'flex-start' }} onClick={() => onNavigate('saved-jobs')}>
-                  📌 Browse Saved Jobs (2)
+                   Browse Saved Jobs ({savedJobs.length})
                 </button>
                 <button className="btn btn-ghost btn-sm" style={{ justifyContent: 'flex-start' }} onClick={() => onNavigate('analytics')}>
-                  📈 View Conversion Report
+                   View Conversion Report
                 </button>
               </div>
             </div>
@@ -55,20 +49,21 @@ function DashboardPage({ applications, onAddApplication, onNavigate }) {
 
           <section>
             {/* Recent Activity Grid */}
-            <div className="section-head" style={{ marginBottom: '24px' }}>
+            <div className="section-head" style={{ marginBottom: '30px' }}>
               <div>
                 <h2>Recent Activity</h2>
                 <p>Latest updates in your pipeline</p>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '25px' }}>
               {applications.slice(0, 4).map(app => (
-                <ApplicationCard key={app.id} app={app} />
+                <ApplicationCard key={app.id} app={app} onUpdate={onUpdateApplication} onDelete={onDeleteApplication} />
               ))}
+              {applications.length === 0 && <p className="dashboard-empty-copy">Your saved application updates will appear here.</p>}
             </div>
 
-            <button className="btn btn-secondary" style={{ width: '100%', marginTop: '40px', padding: '14px', fontWeight: 500 }} onClick={() => onNavigate('applications')}>
+            <button className="btn btn-secondary" style={{ width: '100%', marginTop: '60px', padding: '14px', fontWeight: 500 }} onClick={() => onNavigate('applications')}>
               See all applications ({applications.length}) →
             </button>
           </section>
@@ -101,23 +96,24 @@ function DashboardPage({ applications, onAddApplication, onNavigate }) {
                 <div style={{ display: 'flex', gap: '40px' }}>
                   <div>
                     <span style={{ fontSize: '.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--tx-3)' }}>Location</span>
-                    <p style={{ fontSize: '.85rem', fontWeight: 500, marginTop: '2px' }}>Remote (Zoom)</p>
+                    <p style={{ fontSize: '.85rem', fontWeight: 500, marginTop: '2px' }}>{item.location || 'Not specified'}</p>
                   </div>
                   <div>
                     <span style={{ fontSize: '.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--tx-3)' }}>Interviewer</span>
-                    <p style={{ fontSize: '.85rem', fontWeight: 500, marginTop: '2px' }}>Engineering Team</p>
+                    <p style={{ fontSize: '.85rem', fontWeight: 500, marginTop: '2px' }}>{item.interviewer || 'Not specified'}</p>
                   </div>
                 </div>
 
                 {/* Right: Date and Time */}
                 <div style={{ textAlign: 'right' }}>
                   <span className="badge" style={{ background: 'var(--interview-bg)', color: 'var(--interview)', padding: '6px 12px', fontSize: '.75rem', fontWeight: 600, borderRadius: 'var(--r-full)' }}>
-                    {item.date}
+                    {item.date ? new Date(`${item.date}T12:00:00`).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'Date TBD'}
                   </span>
-                  <p style={{ fontSize: '.8rem', color: 'var(--tx-2)', marginTop: '8px', fontWeight: 500 }}>{item.time} PST</p>
+                  <p style={{ fontSize: '.8rem', color: 'var(--tx-2)', marginTop: '8px', fontWeight: 500 }}>{item.time}</p>
                 </div>
               </div>
             ))}
+            {upcomingInterviews.length === 0 && <p className="dashboard-empty-copy">No upcoming interviews. Add one to see it on your dashboard.</p>}
           </div>
         </div>
       </div>
