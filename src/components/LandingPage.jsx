@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import '../landing.css';
 
@@ -8,6 +8,10 @@ function LandingPage({ onGetStarted }) {
   const [scrollY, setScrollY] = useState(0);
 
   useScrollReveal();
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,7 +39,9 @@ function LandingPage({ onGetStarted }) {
 
       {/* ── Sticky Nav ── */}
       <nav className={`l-nav ${navSolid ? 'solid' : ''}`}>
-        <span className="l-nav-brand">Career<em>Tracker</em></span>
+        <button type="button" className="l-nav-brand" aria-label="Scroll to the top of the landing page" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+          Career<em>Tracker</em>
+        </button>
         <div className="l-nav-links">
           <a href="#features" className="l-nav-link">Features</a>
           <a href="#how" className="l-nav-link">How it works</a>

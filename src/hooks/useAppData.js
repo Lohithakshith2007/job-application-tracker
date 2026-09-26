@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { APP_DATA_STORAGE_KEY, readAppData } from '../data/appData';
+import { APP_DATA_STORAGE_KEY, EMPTY_APP_DATA, readAppData } from '../data/appData';
 
 // Keep about 1 MB free under the commonly available 5 MB localStorage quota.
 const MAX_STORAGE_BYTES = 4 * 1024 * 1024;
@@ -34,5 +34,18 @@ export function useAppData() {
     });
   }
 
-  return { appData, updateAppData, storageError };
+  function clearAppData() {
+    try {
+      window.localStorage.removeItem(APP_DATA_STORAGE_KEY);
+      setAppData(EMPTY_APP_DATA);
+      setHasChanges(false);
+      setStorageError('');
+      return true;
+    } catch {
+      setStorageError('Could not clear saved data from this browser. Please try again.');
+      return false;
+    }
+  }
+
+  return { appData, updateAppData, clearAppData, storageError };
 }

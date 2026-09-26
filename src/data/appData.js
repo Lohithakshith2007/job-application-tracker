@@ -1,4 +1,9 @@
 export const APP_DATA_STORAGE_KEY = 'job-application-tracker:data:v1';
+export const MAX_NOTE_LENGTH = 50;
+
+export function limitNoteText(note) {
+  return typeof note === 'string' ? note.slice(0, MAX_NOTE_LENGTH) : '';
+}
 
 export const EMPTY_APP_DATA = {
   applications: [],
@@ -16,9 +21,13 @@ export function readAppData() {
     const parsedData = JSON.parse(savedData);
     const wasLegacyDemoVersion = parsedData.schemaVersion === 1;
     const data = {
-      applications: Array.isArray(parsedData.applications) ? parsedData.applications : [],
+      applications: Array.isArray(parsedData.applications)
+        ? parsedData.applications.filter((record) => record && typeof record === 'object').map((record) => ({ ...record, notes: limitNoteText(record.notes) }))
+        : [],
       savedJobs: Array.isArray(parsedData.savedJobs) ? parsedData.savedJobs : [],
-      interviews: Array.isArray(parsedData.interviews) ? parsedData.interviews : [],
+      interviews: Array.isArray(parsedData.interviews)
+        ? parsedData.interviews.filter((record) => record && typeof record === 'object').map((record) => ({ ...record, notes: limitNoteText(record.notes) }))
+        : [],
       profile: { ...EMPTY_APP_DATA.profile, ...parsedData.profile },
       preferences: { ...EMPTY_APP_DATA.preferences, ...parsedData.preferences },
     };

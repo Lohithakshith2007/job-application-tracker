@@ -1,7 +1,16 @@
 import { useState } from "react";
+import ConfirmDialog from './ConfirmDialog';
 
-function AppNav({ activePage, setActivePage, onOpenLanding }) {
+function getInitials(name) {
+  const words = (typeof name === "string" ? name : "").trim().split(/\s+/).filter(Boolean);
+  if (words.length > 1) return `${words[0][0]}${words[1][0]}`.toUpperCase();
+  return words[0]?.[0]?.toUpperCase() || "?";
+}
+
+function AppNav({ activePage, setActivePage, profileName = "", onGoHome, onLogout }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [logoutError, setLogoutError] = useState('');
 
   const pages = [
     { id: "dashboard", label: "Dashboard" },
@@ -21,11 +30,19 @@ function AppNav({ activePage, setActivePage, onOpenLanding }) {
     <header className="app-nav">
       <div className="nav-inner">
         {/* Brand */}
-        <div className="nav-brand" onClick={onOpenLanding}>
+        <button
+          type="button"
+          className="nav-brand"
+          aria-label="Go to the top of the landing page"
+          onClick={() => {
+            setMobileOpen(false);
+            onGoHome();
+          }}
+        >
           <span className="nav-brand-text">
             Career<span className="nav-brand-accent">Tracker</span>
           </span>
-        </div>
+        </button>
 
         {/* Desktop links */}
         <nav className="nav-links">
@@ -45,9 +62,13 @@ function AppNav({ activePage, setActivePage, onOpenLanding }) {
           <button
             className="nav-profile"
             onClick={() => go("settings")}
-            title="Profile"
+            title={profileName || "Profile"}
+            aria-label={`Profile${profileName ? `: ${profileName}` : ""}`}
           >
-            AR
+            {getInitials(profileName)}
+          </button>
+          <button type="button" className="nav-logout" onClick={() => { setLogoutError(''); setShowLogoutConfirm(true); }}>
+            Log out
           </button>
           <button
             className="nav-hamburger"
@@ -96,15 +117,20 @@ function AppNav({ activePage, setActivePage, onOpenLanding }) {
               {p.label}
             </button>
           ))}
-          <button
-            className="nav-drawer-link"
-            style={{ color: "var(--tx-3)", marginTop: "8px" }}
-            onClick={onOpenLanding}
-          >
-            ← Back to landing
-          </button>
         </div>
       )}
+
+      {showLogoutConfirm && <ConfirmDialog
+        title="Log out and clear your data?"
+        message="This permanently deletes your applications, saved jobs, interviews, profile, and preferences saved in this browser. This cannot be undone."
+        errorMessage={logoutError}
+        confirmLabel="Log out and delete data"
+        onCancel={() => setShowLogoutConfirm(false)}
+        onConfirm={() => {
+          if (onLogout()) setShowLogoutConfirm(false);
+          else setLogoutError('The browser could not clear the saved data. Your information is still here. Try again.');
+        }}
+      />}
     </header>
   );
 }

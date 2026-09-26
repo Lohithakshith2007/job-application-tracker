@@ -281,6 +281,7 @@
   border-left: 2px solid var(--accent-border);
   margin-top: 10px;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 @media(max-width: 640px) {

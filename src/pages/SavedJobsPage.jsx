@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const emptyJob = { company: '', role: '', location: '', salary: '', tags: '', posted: '' };
 
 function SavedJobsPage({ jobs, onAddJob, onDeleteJob, onAddApplication }) {
   const [isAdding, setIsAdding] = useState(false);
   const [formData, setFormData] = useState(emptyJob);
+  const [jobToDelete, setJobToDelete] = useState(null);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -75,7 +77,7 @@ function SavedJobsPage({ jobs, onAddJob, onDeleteJob, onAddApplication }) {
                 <button
                   className="btn-ghost"
                   style={{ padding: '4px 8px', borderRadius: 'var(--r-sm)', color: 'var(--rejected)' }}
-                  onClick={() => onDeleteJob(job.id)}
+                  onClick={() => setJobToDelete(job)}
                   title="Remove saved job"
                   aria-label={`Remove ${job.role} at ${job.company}`}
                 >
@@ -101,6 +103,14 @@ function SavedJobsPage({ jobs, onAddJob, onDeleteJob, onAddApplication }) {
           ))}
         </div>
       )}
+
+      {jobToDelete && <ConfirmDialog
+        title="Remove saved job?"
+        message={`Remove ${jobToDelete.role} at ${jobToDelete.company} from your saved jobs?`}
+        confirmLabel="Remove Job"
+        onCancel={() => setJobToDelete(null)}
+        onConfirm={() => { onDeleteJob(jobToDelete.id); setJobToDelete(null); }}
+      />}
     </div>
   );
 }

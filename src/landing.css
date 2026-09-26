@@ -34,6 +34,11 @@
   font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: -0.03em;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
 }
 
 .l-nav-brand em {

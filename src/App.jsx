@@ -8,6 +8,7 @@ import InterviewsPage from './pages/InterviewsPage';
 import AnalyticsPage from './pages/AnalyticsPage';
 import SettingsPage from './pages/SettingsPage';
 import { useAppData } from './hooks/useAppData';
+import { limitNoteText } from './data/appData';
 import './App.css';
 import './pages.css';
 
@@ -25,15 +26,15 @@ function toInterviewDateParts(date) {
 }
 
 function App() {
-  const [view, setView] = useState('landing');
+  const [view, setView] = useState('app');
   const [activePage, setActivePage] = useState('dashboard');
-  const { appData, updateAppData, storageError } = useAppData();
+  const { appData, updateAppData, clearAppData, storageError } = useAppData();
   const { applications, savedJobs, interviews, profile, preferences } = appData;
 
   function addApplication(newApp) {
     updateAppData((current) => ({
       ...current,
-      applications: [{ ...newApp, id: createId(), date: newApp.date || new Date().toISOString().slice(0, 10) }, ...current.applications],
+      applications: [{ ...newApp, notes: limitNoteText(newApp.notes), id: createId(), date: newApp.date || new Date().toISOString().slice(0, 10) }, ...current.applications],
     }));
   }
 
@@ -41,7 +42,9 @@ function App() {
     updateAppData((current) => ({
       ...current,
       applications: current.applications.map((application) => (
-        application.id === id ? { ...application, ...changes } : application
+        application.id === id
+          ? { ...application, ...changes, notes: limitNoteText(changes.notes ?? application.notes) }
+          : application
       )),
     }));
   }
@@ -70,7 +73,7 @@ function App() {
   function addInterview(interview) {
     updateAppData((current) => ({
       ...current,
-      interviews: [{ ...interview, ...toInterviewDateParts(interview.date), id: createId() }, ...current.interviews],
+      interviews: [{ ...interview, notes: limitNoteText(interview.notes), ...toInterviewDateParts(interview.date), id: createId() }, ...current.interviews],
     }));
   }
 
@@ -85,8 +88,24 @@ function App() {
     updateAppData((current) => ({ ...current, ...nextSettings }));
   }
 
+  function showLandingPage() {
+    setView('landing');
+  }
+
+  function showApp() {
+    setActivePage('dashboard');
+    setView('app');
+  }
+
+  function logOut() {
+    if (!clearAppData()) return false;
+    setActivePage('dashboard');
+    setView('landing');
+    return true;
+  }
+
   if (view === 'landing') {
-    return <LandingPage onGetStarted={() => setView('app')} />;
+    return <LandingPage onGetStarted={showApp} />;
   }
 
   let pageContent;
@@ -118,7 +137,9 @@ function App() {
       <AppNav
         activePage={activePage}
         setActivePage={setActivePage}
-        onOpenLanding={() => setView('landing')}
+        profileName={profile.fullName}
+        onGoHome={showLandingPage}
+        onLogout={logOut}
       />
       <main className="app-main">
         {pageContent}

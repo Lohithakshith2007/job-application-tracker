@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import ConfirmDialog from '../components/ConfirmDialog';
+import NotesField from '../components/NotesField';
 
 const emptyInterview = {
   company: '',
@@ -15,6 +17,7 @@ const emptyInterview = {
 function InterviewsPage({ interviews, onAddInterview, onDeleteInterview }) {
   const [isAdding, setIsAdding] = useState(false);
   const [formData, setFormData] = useState(emptyInterview);
+  const [interviewToDelete, setInterviewToDelete] = useState(null);
 
   function updateField(event) {
     const { name, value } = event.target;
@@ -23,6 +26,7 @@ function InterviewsPage({ interviews, onAddInterview, onDeleteInterview }) {
 
   function handleSubmit(event) {
     event.preventDefault();
+    if (!formData.date) return;
     onAddInterview(formData);
     setFormData(emptyInterview);
     setIsAdding(false);
@@ -48,15 +52,25 @@ function InterviewsPage({ interviews, onAddInterview, onDeleteInterview }) {
           <div className="data-entry-grid">
             <div className="field"><label htmlFor="interview-company">Company</label><input className="input-base" id="interview-company" name="company" maxLength={120} value={formData.company} onChange={updateField} required /></div>
             <div className="field"><label htmlFor="interview-role">Role</label><input className="input-base" id="interview-role" name="role" maxLength={160} value={formData.role} onChange={updateField} required /></div>
-            <div className="field"><label htmlFor="interview-date">Date</label><input className="input-base" id="interview-date" name="date" type="date" value={formData.date} onChange={updateField} required /></div>
+            <div className="field">
+              <label htmlFor="interview-date">Date<span className="req"> *</span></label>
+              <input id="interview-date" className="input-base date-input" type="date" name="date" value={formData.date} onChange={updateField} required />
+            </div>
             <div className="field"><label htmlFor="interview-time">Time and timezone</label><input className="input-base" id="interview-time" name="time" value={formData.time} onChange={updateField} placeholder="2:00 PM - 3:00 PM EST" /></div>
             <div className="field"><label htmlFor="interview-type">Round type</label><input className="input-base" id="interview-type" name="type" value={formData.type} onChange={updateField} required /></div>
             <div className="field"><label htmlFor="interview-status">Status</label><select className="input-base" id="interview-status" name="status" value={formData.status} onChange={updateField}><option>Upcoming</option><option>Completed</option><option>Cancelled</option></select></div>
             <div className="field"><label htmlFor="interview-interviewer">Interviewer</label><input className="input-base" id="interview-interviewer" name="interviewer" value={formData.interviewer} onChange={updateField} /></div>
             <div className="field"><label htmlFor="interview-location">Location or link</label><input className="input-base" id="interview-location" name="location" value={formData.location} onChange={updateField} placeholder="Google Meet, phone, office" /></div>
-            <div className="field data-entry-wide"><label htmlFor="interview-notes">Preparation notes</label><textarea className="input-base" id="interview-notes" name="notes" maxLength={2000} rows="3" value={formData.notes} onChange={updateField} /></div>
+            <NotesField
+              id="interview-notes"
+              className="field data-entry-wide"
+              textareaClassName="input-base"
+              label="Preparation notes"
+              value={formData.notes}
+              onChange={updateField}
+            />
           </div>
-          <div className="data-entry-actions"><button type="submit" className="btn btn-primary btn-sm">Save Interview</button></div>
+          <div className="data-entry-actions"><button type="submit" className="btn btn-primary btn-sm" disabled={!formData.date}>Save Interview</button></div>
         </form>
       )}
 
@@ -88,12 +102,19 @@ function InterviewsPage({ interviews, onAddInterview, onDeleteInterview }) {
 
               <div className="interview-status interview-actions">
                 <span className={`badge ${item.status === 'Upcoming' ? 'badge-interview' : 'badge-applied'}`}>{item.type} · {item.status}</span>
-                <button className="btn-ghost interview-delete" onClick={() => onDeleteInterview(item.id)} aria-label={`Delete interview for ${item.role} at ${item.company}`} title="Delete interview">✕</button>
+                <button className="btn-ghost interview-delete" onClick={() => setInterviewToDelete(item)} aria-label={`Delete interview for ${item.role} at ${item.company}`} title="Delete interview">✕</button>
               </div>
             </div>
           ))}
         </div>
       )}
+
+      {interviewToDelete && <ConfirmDialog
+        title="Delete interview?"
+        message={`This will remove the ${interviewToDelete.type} for ${interviewToDelete.role} at ${interviewToDelete.company}.`}
+        onCancel={() => setInterviewToDelete(null)}
+        onConfirm={() => { onDeleteInterview(interviewToDelete.id); setInterviewToDelete(null); }}
+      />}
     </div>
   );
 }

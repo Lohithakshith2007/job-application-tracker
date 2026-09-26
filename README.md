@@ -22,7 +22,7 @@ New installs start with empty applications, saved jobs, and interviews. No demo 
 
 The first load after updating from the demo build removes the old numeric-ID sample rows and keeps records added through the app.
 
-The app keeps its saved JSON below an estimated 4 MiB to leave room under the common 5 MiB browser limit. Browsers differ, so it also handles storage write errors. Keep notes short and do not store attachments, images, or full job descriptions here.
+The app keeps its saved JSON below an estimated 4 MiB to leave room under the common 5 MiB browser limit. Browsers differ, so it also handles storage write errors. Notes are limited to 50 characters; do not store attachments, images, or full job descriptions here.
 
 This is device-local storage: it does not sync to an account or between browsers. Clearing site data or switching devices removes access to that browser's copy. Avoid storing passwords, access tokens, or other secrets here.
 

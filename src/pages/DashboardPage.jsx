@@ -1,9 +1,9 @@
 import Dashboard from '../components/Dashboard';
 import ApplicationForm from '../components/ApplicationForm';
-import ApplicationList from '../components/ApplicationList';
 import ApplicationCard from '../components/ApplicationCard';
 
 function DashboardPage({ applications, savedJobs, interviews, profile, onAddApplication, onUpdateApplication, onDeleteApplication, onNavigate }) {
+  const recentApplications = applications.slice(0, 3);
   const today = new Date().toISOString().slice(0, 10);
   const upcomingInterviews = interviews
     .filter((interview) => interview.status === 'Upcoming' && interview.date >= today)
@@ -57,7 +57,7 @@ function DashboardPage({ applications, savedJobs, interviews, profile, onAddAppl
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '25px' }}>
-              {applications.slice(0, 4).map(app => (
+              {recentApplications.map(app => (
                 <ApplicationCard key={app.id} app={app} onUpdate={onUpdateApplication} onDelete={onDeleteApplication} />
               ))}
               {applications.length === 0 && <p className="dashboard-empty-copy">Your saved application updates will appear here.</p>}
