@@ -53,8 +53,8 @@ function LandingPage({ onGetStarted }) {
         <div 
           className="hero-grid hero-grid-glow" 
           style={{ 
-            maskImage: `radial-gradient(600px circle at ${mousePos.px}px ${mousePos.py}px, rgba(0,0,0,1), transparent)`,
-            WebkitMaskImage: `radial-gradient(600px circle at ${mousePos.px}px ${mousePos.py}px, rgba(0,0,0,1), transparent)`
+              maskImage: `radial-gradient(600px circle at ${mousePos.px}px ${mousePos.py}px, rgba(0,0,0,1), transparent)`,
+              WebkitMaskImage: `radial-gradient(600px circle at ${mousePos.px}px ${mousePos.py}px, rgba(0,0,0,1), transparent)`
           }}
         ></div>
 

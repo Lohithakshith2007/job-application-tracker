@@ -1,6 +1,7 @@
 import Dashboard from '../components/Dashboard';
 import ApplicationForm from '../components/ApplicationForm';
 import ApplicationList from '../components/ApplicationList';
+import ApplicationCard from '../components/ApplicationCard';
 
 function DashboardPage({ applications, onAddApplication, onNavigate }) {
   const recentApplications = applications.slice(0, 3);
@@ -16,16 +17,15 @@ function DashboardPage({ applications, onAddApplication, onNavigate }) {
   ];
 
   return (
-    <div className="page">
+    <div className="page fade-in">
       <div className="page-header">
         <div>
           <h1 className="page-title">Welcome back, Alex 👋</h1>
           <p className="page-subtitle">Here is what is happening across your job application pipeline today.</p>
         </div>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button className="btn btn-secondary" onClick={() => onNavigate('applications')}>
-            View All Applications ({applications.length})
-          </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 16px', background: 'var(--bg-elevated)', borderRadius: 'var(--r-full)', border: '1px solid var(--border)' }}>
+          <div style={{ width: 8, height: 8, background: 'var(--accent)', borderRadius: '50%', boxShadow: '0 0 10px var(--accent)' }}></div>
+          <span style={{ fontSize: '.85rem', color: 'var(--tx-2)', fontWeight: 500 }}>Live Sync Active • {new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
         </div>
       </div>
 
@@ -53,37 +53,72 @@ function DashboardPage({ applications, onAddApplication, onNavigate }) {
             </div>
           </aside>
 
-          <section style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-            <ApplicationList applications={applications} />
-
-            {/* Upcoming Interviews Preview */}
-            <div className="card" style={{ padding: '24px' }}>
-              <div className="section-head" style={{ marginBottom: '16px' }}>
-                <div>
-                  <h2>Upcoming Interviews</h2>
-                  <p>Next scheduled rounds</p>
-                </div>
-                <button className="btn btn-ghost btn-sm" onClick={() => onNavigate('interviews')}>
-                  View Calendar →
-                </button>
-              </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {upcomingInterviews.map((item) => (
-                  <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-base)', padding: '14px 16px', borderRadius: 'var(--r-md)', border: '1px solid var(--border)' }}>
-                    <div>
-                      <h4 style={{ fontSize: '.92rem', fontWeight: 600 }}>{item.role}</h4>
-                      <p style={{ fontSize: '.82rem', color: 'var(--tx-2)' }}>{item.company} • {item.type}</p>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <span className="badge badge-interview">{item.date}</span>
-                      <p style={{ fontSize: '.78rem', color: 'var(--tx-3)', marginTop: '4px' }}>{item.time}</p>
-                    </div>
-                  </div>
-                ))}
+          <section>
+            {/* Recent Activity Grid */}
+            <div className="section-head" style={{ marginBottom: '24px' }}>
+              <div>
+                <h2>Recent Activity</h2>
+                <p>Latest updates in your pipeline</p>
               </div>
             </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+              {applications.slice(0, 4).map(app => (
+                <ApplicationCard key={app.id} app={app} />
+              ))}
+            </div>
+
+            <button className="btn btn-secondary" style={{ width: '100%', marginTop: '40px', padding: '14px', fontWeight: 500 }} onClick={() => onNavigate('applications')}>
+              See all applications ({applications.length}) →
+            </button>
           </section>
+        </div>
+
+        {/* Full-width Upcoming Interviews Section */}
+        <div className="card" style={{ margin: '48px 0 60px', padding: '32px' }}>
+          <div className="section-head" style={{ marginBottom: '24px' }}>
+            <div style={{ marginBottom: '1rem' }}>
+              <h2 style={{ fontSize: '1.25rem' }}>Upcoming Interviews</h2>
+              <p>Next scheduled rounds</p>
+            </div>
+            <button className="btn btn-secondary btn-sm" onClick={() => onNavigate('interviews')}>
+              View Full Schedule
+            </button>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {upcomingInterviews.map((item) => (
+              <div key={item.id} className="interview-row" style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 1fr', alignItems: 'center', background: 'var(--bg-base)', padding: '20px 24px', borderRadius: 'var(--r-md)', border: '1px solid var(--border)' }}>
+                {/* Left: Role and Company */}
+                <div>
+                  <h4 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--tx-1)', marginBottom: '4px' }}>{item.role}</h4>
+                  <p style={{ fontSize: '.85rem', color: 'var(--tx-2)', display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <span style={{ color: 'var(--accent-light)' }}>{item.company}</span> • {item.type}
+                  </p>
+                </div>
+
+                {/* Middle: Added Impressive Details */}
+                <div style={{ display: 'flex', gap: '40px' }}>
+                  <div>
+                    <span style={{ fontSize: '.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--tx-3)' }}>Location</span>
+                    <p style={{ fontSize: '.85rem', fontWeight: 500, marginTop: '2px' }}>Remote (Zoom)</p>
+                  </div>
+                  <div>
+                    <span style={{ fontSize: '.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--tx-3)' }}>Interviewer</span>
+                    <p style={{ fontSize: '.85rem', fontWeight: 500, marginTop: '2px' }}>Engineering Team</p>
+                  </div>
+                </div>
+
+                {/* Right: Date and Time */}
+                <div style={{ textAlign: 'right' }}>
+                  <span className="badge" style={{ background: 'var(--interview-bg)', color: 'var(--interview)', padding: '6px 12px', fontSize: '.75rem', fontWeight: 600, borderRadius: 'var(--r-full)' }}>
+                    {item.date}
+                  </span>
+                  <p style={{ fontSize: '.8rem', color: 'var(--tx-2)', marginTop: '8px', fontWeight: 500 }}>{item.time} PST</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
