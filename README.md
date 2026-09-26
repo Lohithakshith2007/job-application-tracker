@@ -11,18 +11,20 @@ npm run dev
 
 ## Data storage
 
-The app stores its user data in the browser's `localStorage` under `job-application-tracker:data:v1`. A single versioned record holds:
+The app stores its user data in the browser's `localStorage` under `job-application-tracker:data:v1`. One small JSON record holds:
 
 - Applications and their status, date, and notes
 - Saved jobs and their company, role, location, salary, tags, and posting age
 - Interviews and their date, time, type, interviewer, location, status, and notes
 - Profile fields and app preferences
 
-Changes from the dashboard, applications, saved jobs, interviews, and settings all update that shared record. Dashboard counts and upcoming interviews are derived from the same data. The record is loaded when the app starts, so it survives refreshes in the same browser profile.
+New installs start with empty applications, saved jobs, and interviews. No demo records are written. The app loads saved data at startup and saves after a user changes a record or setting. Dashboard counts and upcoming interviews are derived from those same records.
 
-Use **Settings → Data Export / Backup** to download a JSON backup or restore one. Restoring replaces the records currently in the browser. The app starts with the sample records when no saved record exists yet.
+The first load after updating from the demo build removes the old numeric-ID sample rows and keeps records added through the app.
 
-This is device-local storage: it does not sync to an account or between browsers. Clearing site data or switching devices removes access to that browser's copy, so export a backup when you need one. Avoid storing passwords, access tokens, or other secrets here.
+The app keeps its saved JSON below an estimated 4 MiB to leave room under the common 5 MiB browser limit. Browsers differ, so it also handles storage write errors. Keep notes short and do not store attachments, images, or full job descriptions here.
+
+This is device-local storage: it does not sync to an account or between browsers. Clearing site data or switching devices removes access to that browser's copy. Avoid storing passwords, access tokens, or other secrets here.
 
 ## Build
 

@@ -46,15 +46,15 @@ function InterviewsPage({ interviews, onAddInterview, onDeleteInterview }) {
         <form className="data-entry-panel" onSubmit={handleSubmit}>
           <h2>Schedule an interview</h2>
           <div className="data-entry-grid">
-            <div className="field"><label htmlFor="interview-company">Company</label><input className="input-base" id="interview-company" name="company" value={formData.company} onChange={updateField} required /></div>
-            <div className="field"><label htmlFor="interview-role">Role</label><input className="input-base" id="interview-role" name="role" value={formData.role} onChange={updateField} required /></div>
+            <div className="field"><label htmlFor="interview-company">Company</label><input className="input-base" id="interview-company" name="company" maxLength={120} value={formData.company} onChange={updateField} required /></div>
+            <div className="field"><label htmlFor="interview-role">Role</label><input className="input-base" id="interview-role" name="role" maxLength={160} value={formData.role} onChange={updateField} required /></div>
             <div className="field"><label htmlFor="interview-date">Date</label><input className="input-base" id="interview-date" name="date" type="date" value={formData.date} onChange={updateField} required /></div>
             <div className="field"><label htmlFor="interview-time">Time and timezone</label><input className="input-base" id="interview-time" name="time" value={formData.time} onChange={updateField} placeholder="2:00 PM - 3:00 PM EST" /></div>
             <div className="field"><label htmlFor="interview-type">Round type</label><input className="input-base" id="interview-type" name="type" value={formData.type} onChange={updateField} required /></div>
             <div className="field"><label htmlFor="interview-status">Status</label><select className="input-base" id="interview-status" name="status" value={formData.status} onChange={updateField}><option>Upcoming</option><option>Completed</option><option>Cancelled</option></select></div>
             <div className="field"><label htmlFor="interview-interviewer">Interviewer</label><input className="input-base" id="interview-interviewer" name="interviewer" value={formData.interviewer} onChange={updateField} /></div>
             <div className="field"><label htmlFor="interview-location">Location or link</label><input className="input-base" id="interview-location" name="location" value={formData.location} onChange={updateField} placeholder="Google Meet, phone, office" /></div>
-            <div className="field data-entry-wide"><label htmlFor="interview-notes">Preparation notes</label><textarea className="input-base" id="interview-notes" name="notes" rows="3" value={formData.notes} onChange={updateField} /></div>
+            <div className="field data-entry-wide"><label htmlFor="interview-notes">Preparation notes</label><textarea className="input-base" id="interview-notes" name="notes" maxLength={2000} rows="3" value={formData.notes} onChange={updateField} /></div>
           </div>
           <div className="data-entry-actions"><button type="submit" className="btn btn-primary btn-sm">Save Interview</button></div>
         </form>

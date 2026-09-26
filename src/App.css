@@ -15,12 +15,12 @@
 }
 
 .storage-notice {
-  padding: 8px 48px;
+  padding: 2rem 3rem;
   color: var(--tx-3);
   background: var(--bg-base);
   border-bottom: 1px solid var(--border);
   font-size: 0.75rem;
-  text-align: right;
+  text-align: center;
 }
 
 .storage-notice-error {
@@ -231,35 +231,14 @@
   padding: 6px 9px;
 }
 
-.settings-help {
-  max-width: 700px;
-  color: var(--tx-2);
-  font-size: 0.875rem;
-  line-height: 1.6;
-}
-
-.backup-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.settings-error {
-  color: var(--rejected);
-  font-size: 0.85rem;
-}
-
 .settings-save-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
   margin-top: 12px;
 }
 
 .settings-save-message {
   color: var(--tx-2);
   font-size: 0.85rem;
+  margin-bottom: 1.5rem ;
 }
 
 @media(max-width: 640px) {
@@ -278,7 +257,7 @@
 }
 
 .input-base {
-  padding: 10px 14px;
+  padding: 15px 14px;
   background: var(--bg-base);
   border: 1px solid var(--border-md);
   border-radius: var(--r-md);
@@ -1383,7 +1362,7 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 26px;
   position: relative;
   transition: all 0.25s var(--ease-out);
 }

@@ -35,12 +35,12 @@ function ApplicationForm({ onAddApplication }) {
           <div className="pfp-fieldgroup">
             <div className="pfp-field">
               <label>Company Name <span className="req">*</span></label>
-              <input type="text" name="company" placeholder="Vercel, Stripe" value={formData.company} onChange={handleChange} required />
+              <input type="text" name="company" maxLength={120} placeholder="Vercel, Stripe" value={formData.company} onChange={handleChange} required />
             </div>
             
             <div className="pfp-field">
               <label>Role / Title <span className="req">*</span></label>
-              <input type="text" name="role" placeholder="Frontend Engineer" value={formData.role} onChange={handleChange} required />
+              <input type="text" name="role" maxLength={160} placeholder="Frontend Engineer" value={formData.role} onChange={handleChange} required />
             </div>
           </div>
 
@@ -68,7 +68,7 @@ function ApplicationForm({ onAddApplication }) {
 
           <div className="pfp-field">
             <label>Preparation Notes & Links</label>
-            <textarea name="notes" placeholder="Paste job description URL, referral contact, or prep notes here..." rows="3" value={formData.notes} onChange={handleChange}></textarea>
+            <textarea name="notes" maxLength={2000} placeholder="Add short prep notes or a job link..." rows="3" value={formData.notes} onChange={handleChange}></textarea>
           </div>
 
           <button type="submit" className="pfp-submit-btn">

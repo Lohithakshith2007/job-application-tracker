@@ -44,11 +44,11 @@ function ApplicationCard({ app, onUpdate, onDelete }) {
       </div>
 
       {isEditing && <form className="application-edit-form" onSubmit={handleEdit}>
-        <label>Company<input className="input-base" value={formData.company} onChange={(event) => setFormData((current) => ({ ...current, company: event.target.value }))} required /></label>
-        <label>Role<input className="input-base" value={formData.role} onChange={(event) => setFormData((current) => ({ ...current, role: event.target.value }))} required /></label>
+        <label>Company<input className="input-base" maxLength={120} value={formData.company} onChange={(event) => setFormData((current) => ({ ...current, company: event.target.value }))} required /></label>
+        <label>Role<input className="input-base" maxLength={160} value={formData.role} onChange={(event) => setFormData((current) => ({ ...current, role: event.target.value }))} required /></label>
         <label>Status<select className="input-base" value={formData.status} onChange={(event) => setFormData((current) => ({ ...current, status: event.target.value }))}><option>Applied</option><option>Interview</option><option>Offer</option><option>Rejected</option></select></label>
         <label>Applied date<input className="input-base" type="date" value={formData.date || ''} onChange={(event) => setFormData((current) => ({ ...current, date: event.target.value }))} /></label>
-        <label className="application-edit-wide">Notes<textarea className="input-base" rows="3" value={formData.notes || ''} onChange={(event) => setFormData((current) => ({ ...current, notes: event.target.value }))} /></label>
+        <label className="application-edit-wide">Notes<textarea className="input-base" maxLength={2000} rows="3" value={formData.notes || ''} onChange={(event) => setFormData((current) => ({ ...current, notes: event.target.value }))} /></label>
         <div className="data-entry-actions application-edit-wide"><button type="button" className="btn btn-secondary btn-sm" onClick={() => setIsEditing(false)}>Cancel</button><button type="submit" className="btn btn-primary btn-sm">Save Changes</button></div>
       </form>}
 

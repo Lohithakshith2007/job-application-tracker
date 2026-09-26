@@ -43,11 +43,11 @@ function SavedJobsPage({ jobs, onAddJob, onDeleteJob, onAddApplication }) {
         <form className="data-entry-panel" onSubmit={handleSubmit}>
           <h2>Save a job</h2>
           <div className="data-entry-grid">
-            <div className="field"><label htmlFor="job-company">Company</label><input className="input-base" id="job-company" name="company" value={formData.company} onChange={updateField} required /></div>
-            <div className="field"><label htmlFor="job-role">Role</label><input className="input-base" id="job-role" name="role" value={formData.role} onChange={updateField} required /></div>
-            <div className="field"><label htmlFor="job-location">Location</label><input className="input-base" id="job-location" name="location" value={formData.location} onChange={updateField} placeholder="Remote or city" /></div>
-            <div className="field"><label htmlFor="job-salary">Salary</label><input className="input-base" id="job-salary" name="salary" value={formData.salary} onChange={updateField} placeholder="Optional" /></div>
-            <div className="field"><label htmlFor="job-tags">Skills / tags</label><input className="input-base" id="job-tags" name="tags" value={formData.tags} onChange={updateField} placeholder="React, TypeScript" /></div>
+            <div className="field"><label htmlFor="job-company">Company</label><input className="input-base" id="job-company" name="company" maxLength={120} value={formData.company} onChange={updateField} required /></div>
+            <div className="field"><label htmlFor="job-role">Role</label><input className="input-base" id="job-role" name="role" maxLength={160} value={formData.role} onChange={updateField} required /></div>
+            <div className="field"><label htmlFor="job-location">Location</label><input className="input-base" id="job-location" name="location" maxLength={120} value={formData.location} onChange={updateField} placeholder="Remote or city" /></div>
+            <div className="field"><label htmlFor="job-salary">Salary</label><input className="input-base" id="job-salary" name="salary" maxLength={80} value={formData.salary} onChange={updateField} placeholder="Optional" /></div>
+            <div className="field"><label htmlFor="job-tags">Skills / tags</label><input className="input-base" id="job-tags" name="tags" maxLength={500} value={formData.tags} onChange={updateField} placeholder="React, TypeScript" /></div>
             <div className="field"><label htmlFor="job-posted">Posting age</label><input className="input-base" id="job-posted" name="posted" value={formData.posted} onChange={updateField} placeholder="Posted today" /></div>
           </div>
           <div className="data-entry-actions"><button type="submit" className="btn btn-primary btn-sm">Save Job</button></div>

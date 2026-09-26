@@ -19,7 +19,7 @@ function DashboardPage({ applications, savedJobs, interviews, profile, onAddAppl
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 16px', background: 'var(--bg-elevated)', borderRadius: 'var(--r-full)', border: '1px solid var(--border)' }}>
           <div style={{ width: 8, height: 8, background: 'var(--accent)', borderRadius: '50%', boxShadow: '0 0 10px var(--accent)' }}></div>
-          <span style={{ fontSize: '.85rem', color: 'var(--tx-2)', fontWeight: 500 }}>Saved on this device • {new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+          <span style={{ fontSize: '.85rem', color: 'var(--tx-2)', fontWeight: 500 }}>Local data • {new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
         </div>
       </div>
 
@@ -63,14 +63,14 @@ function DashboardPage({ applications, savedJobs, interviews, profile, onAddAppl
               {applications.length === 0 && <p className="dashboard-empty-copy">Your saved application updates will appear here.</p>}
             </div>
 
-            <button className="btn btn-secondary" style={{ width: '100%', marginTop: '60px', padding: '14px', fontWeight: 500 }} onClick={() => onNavigate('applications')}>
+            <button className="btn btn-secondary" style={{ width: '100%', marginTop: '40px', padding: '14px', fontWeight: 500 }} onClick={() => onNavigate('applications')}>
               See all applications ({applications.length}) →
             </button>
           </section>
         </div>
 
         {/* Full-width Upcoming Interviews Section */}
-        <div className="card" style={{ margin: '48px 0 60px', padding: '32px' }}>
+        <div className="card" style={{ margin: '48px 0 1px', padding: '32px' }}>
           <div className="section-head" style={{ marginBottom: '24px' }}>
             <div style={{ marginBottom: '1rem' }}>
               <h2 style={{ fontSize: '1.25rem' }}>Upcoming Interviews</h2>

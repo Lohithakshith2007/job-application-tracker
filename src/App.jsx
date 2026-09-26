@@ -85,10 +85,6 @@ function App() {
     updateAppData((current) => ({ ...current, ...nextSettings }));
   }
 
-  function importAppData(importedData) {
-    updateAppData(importedData);
-  }
-
   if (view === 'landing') {
     return <LandingPage onGetStarted={() => setView('app')} />;
   }
@@ -111,7 +107,7 @@ function App() {
       pageContent = <AnalyticsPage applications={applications} />;
       break;
     case 'settings':
-      pageContent = <SettingsPage profile={profile} preferences={preferences} appData={appData} onSave={saveSettings} onImport={importAppData} />;
+      pageContent = <SettingsPage profile={profile} preferences={preferences} onSave={saveSettings} />;
       break;
     default:
       pageContent = <DashboardPage applications={applications} savedJobs={savedJobs} interviews={interviews} profile={profile} onAddApplication={addApplication} onUpdateApplication={updateApplication} onDeleteApplication={deleteApplication} onNavigate={setActivePage} />;
@@ -124,12 +120,12 @@ function App() {
         setActivePage={setActivePage}
         onOpenLanding={() => setView('landing')}
       />
-      <div className={`storage-notice${storageError ? ' storage-notice-error' : ''}`} role="status" aria-live="polite">
-        {storageError || 'Your data is saved locally on this device'}
-      </div>
       <main className="app-main">
         {pageContent}
       </main>
+      <div className={`storage-notice${storageError ? ' storage-notice-error' : ''}`} role="status" aria-live="polite">
+        {storageError || 'Storage is limited to this browser'}
+      </div>
     </div>
   );
 }
