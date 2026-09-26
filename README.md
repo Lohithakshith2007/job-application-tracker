@@ -31,3 +31,7 @@ This is device-local storage: it does not sync to an account or between browsers
 ```sh
 npm run build
 ```
+
+## Deploy to Render
+
+This is a static Vite app, so Render builds it with `npm ci && npm run build` and publishes the generated `dist` folder. The root `render.yaml` defines these settings. Connect this repository in Render and create a Blueprint from `render.yaml` to deploy it. The `.node-version` file pins the Node.js version used for the build.

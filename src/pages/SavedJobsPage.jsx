@@ -3,7 +3,7 @@ import ConfirmDialog from '../components/ConfirmDialog';
 
 const emptyJob = { company: '', role: '', location: '', salary: '', tags: '', posted: '' };
 
-function SavedJobsPage({ jobs, onAddJob, onDeleteJob, onAddApplication }) {
+function SavedJobsPage({ jobs, applications = [], onAddJob, onDeleteJob, onAddApplication }) {
   const [isAdding, setIsAdding] = useState(false);
   const [formData, setFormData] = useState(emptyJob);
   const [jobToDelete, setJobToDelete] = useState(null);
@@ -64,43 +64,55 @@ function SavedJobsPage({ jobs, onAddJob, onDeleteJob, onAddApplication }) {
         </div>
       ) : (
         <div className="jobs-grid">
-          {jobs.map((job) => (
-            <div key={job.id} className="job-card">
-              <div className="job-card-head">
-                <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
-                  <div className="job-card-logo">{job.company.charAt(0).toUpperCase()}</div>
-                  <div className="job-card-title">
-                    <h3>{job.role}</h3>
-                    <p>{job.company}{job.location ? ` • ${job.location}` : ''}</p>
+          {jobs.map((job) => {
+            const normalize = (value) => (typeof value === 'string' ? value.trim().toLowerCase() : '');
+            const isApplied = applications.some((application) => (
+              normalize(application.company) === normalize(job.company)
+              && normalize(application.role) === normalize(job.role)
+            ));
+
+            return (
+              <div key={job.id} className="job-card">
+                <div className="job-card-head">
+                  <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
+                    <div className="job-card-logo">{job.company.charAt(0).toUpperCase()}</div>
+                    <div className="job-card-title">
+                      <h3>{job.role}</h3>
+                      <p>{job.company}{job.location ? ` • ${job.location}` : ''}</p>
+                    </div>
                   </div>
+                  <button
+                    className="btn-ghost"
+                    style={{ padding: '4px 8px', borderRadius: 'var(--r-sm)', color: 'var(--rejected)' }}
+                    onClick={() => setJobToDelete(job)}
+                    title="Remove saved job"
+                    aria-label={`Remove ${job.role} at ${job.company}`}
+                  >
+                    ✕
+                  </button>
                 </div>
-                <button
-                  className="btn-ghost"
-                  style={{ padding: '4px 8px', borderRadius: 'var(--r-sm)', color: 'var(--rejected)' }}
-                  onClick={() => setJobToDelete(job)}
-                  title="Remove saved job"
-                  aria-label={`Remove ${job.role} at ${job.company}`}
-                >
-                  ✕
-                </button>
-              </div>
 
-              {job.tags?.length > 0 && <div className="job-meta-pills">{job.tags.map((tag) => <span key={tag} className="meta-pill">{tag}</span>)}</div>}
+                {job.tags?.length > 0 && <div className="job-meta-pills">{job.tags.map((tag) => <span key={tag} className="meta-pill">{tag}</span>)}</div>}
 
-              <div className="job-card-footer">
-                <div>
-                  {job.salary && <span className="job-salary">{job.salary}</span>}
-                  <p style={{ fontSize: '.75rem', color: 'var(--tx-3)', marginTop: '2px' }}>{job.posted}</p>
+                <div className="job-card-footer">
+                  <div>
+                    {job.salary && <span className="job-salary">{job.salary}</span>}
+                    <p style={{ fontSize: '.75rem', color: 'var(--tx-3)', marginTop: '2px' }}>{job.posted}</p>
+                  </div>
+                  {isApplied ? (
+                    <span className="btn btn-accent-ghost btn-sm saved-job-applied" role="status">Applied</span>
+                  ) : (
+                    <button
+                      className="btn btn-accent-ghost btn-sm"
+                      onClick={() => onAddApplication({ company: job.company, role: job.role, status: 'Applied', date: new Date().toISOString().slice(0, 10), notes: `Saved job${job.location ? ` • ${job.location}` : ''}${job.salary ? ` • ${job.salary}` : ''}` })}
+                    >
+                      Add to Applications →
+                    </button>
+                  )}
                 </div>
-                <button
-                  className="btn btn-accent-ghost btn-sm"
-                  onClick={() => onAddApplication({ company: job.company, role: job.role, status: 'Applied', date: new Date().toISOString().slice(0, 10), notes: `Saved job${job.location ? ` • ${job.location}` : ''}${job.salary ? ` • ${job.salary}` : ''}` })}
-                >
-                  Add to Applications →
-                </button>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

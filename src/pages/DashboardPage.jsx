@@ -3,7 +3,7 @@ import ApplicationForm from '../components/ApplicationForm';
 import ApplicationCard from '../components/ApplicationCard';
 
 function DashboardPage({ applications, savedJobs, interviews, profile, onAddApplication, onUpdateApplication, onDeleteApplication, onNavigate }) {
-  const recentApplications = applications.slice(0, 3);
+  const recentApplications = applications.slice(0, 4);
   const today = new Date().toISOString().slice(0, 10);
   const upcomingInterviews = interviews
     .filter((interview) => interview.status === 'Upcoming' && interview.date >= today)
@@ -60,7 +60,7 @@ function DashboardPage({ applications, savedJobs, interviews, profile, onAddAppl
               {recentApplications.map(app => (
                 <ApplicationCard key={app.id} app={app} onUpdate={onUpdateApplication} onDelete={onDeleteApplication} />
               ))}
-              {applications.length === 0 && <p className="dashboard-empty-copy">Your saved application updates will appear here.</p>}
+              {applications.length === 0 && <p style={{padding:'15rem'}} className="dashboard-empty-copy">Your saved application updates will appear here.</p>}
             </div>
 
             <button className="btn btn-secondary" style={{ width: '100%', marginTop: '40px', padding: '14px', fontWeight: 500 }} onClick={() => onNavigate('applications')}>
@@ -93,7 +93,7 @@ function DashboardPage({ applications, savedJobs, interviews, profile, onAddAppl
                 </div>
 
                 {/* Middle: Added Impressive Details */}
-                <div style={{ display: 'flex', gap: '40px' }}>
+                <div style={{ display: 'flex', gap: '10rem' }}>
                   <div>
                     <span style={{ fontSize: '.7rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--tx-3)' }}>Location</span>
                     <p style={{ fontSize: '.85rem', fontWeight: 500, marginTop: '2px' }}>{item.location || 'Not specified'}</p>

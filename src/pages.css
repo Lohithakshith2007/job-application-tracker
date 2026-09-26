@@ -130,6 +130,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
   border-top: 1px solid var(--border);
   padding-top: 14px;
 }
@@ -176,6 +178,16 @@
 .btn-accent-ghost:hover {
   background: var(--accent-subtle);
   border-color: var(--accent-light);
+}
+
+.saved-job-applied {
+  cursor: default;
+  user-select: none;
+}
+
+.saved-job-applied:hover {
+  background: none;
+  border-color: var(--accent-border);
 }
 
 /* ── Interviews ──────────────────────────────── */

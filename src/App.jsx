@@ -26,7 +26,7 @@ function toInterviewDateParts(date) {
 }
 
 function App() {
-  const [view, setView] = useState('app');
+  const [view, setView] = useState('landing');
   const [activePage, setActivePage] = useState('dashboard');
   const { appData, updateAppData, clearAppData, storageError } = useAppData();
   const { applications, savedJobs, interviews, profile, preferences } = appData;
@@ -117,7 +117,7 @@ function App() {
       pageContent = <ApplicationsPage applications={applications} onUpdateApplication={updateApplication} onDeleteApplication={deleteApplication} />;
       break;
     case 'saved-jobs':
-      pageContent = <SavedJobsPage jobs={savedJobs} onAddJob={addSavedJob} onDeleteJob={deleteSavedJob} onAddApplication={addApplication} />;
+      pageContent = <SavedJobsPage jobs={savedJobs} applications={applications} onAddJob={addSavedJob} onDeleteJob={deleteSavedJob} onAddApplication={addApplication} />;
       break;
     case 'interviews':
       pageContent = <InterviewsPage interviews={interviews} onAddInterview={addInterview} onDeleteInterview={deleteInterview} />;
